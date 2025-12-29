@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy New Year</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: url("bg2.jpg") no-repeat center center/cover;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+/* Center glowing text */
+.text {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  font-size: 42px;
+  text-shadow:
+    0 0 10px #fff,
+    0 0 25px #ffd700,
+    0 0 50px #ffd700;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Rocket */
+.rocket {
+  position: absolute;
+  bottom: 0;
+  width: 5px;
+  height: 22px;
+  background: white;
+  animation: launch 1.6s ease-out forwards;
+}
+
+@keyframes launch {
+  to {
+    transform: translateY(-65vh);
+    opacity: 0;
+  }
+}
+
+/* Firework sparks */
+.spark {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  animation: fall 3.2s ease-out forwards;
+}
+
+@keyframes fall {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--x), var(--y)) scale(0.25);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="text">
+  Happy New Year, Meenakshy 💫<br>
+  May this year truly belong to you.
+</div>
+
+<script>
+// Launch ONE rocket
+function launchFirework() {
+  const rocket = document.createElement("div");
+  rocket.className = "rocket";
+  rocket.style.left = Math.random() * 90 + 5 + "vw";
+  document.body.appendChild(rocket);
+
+  setTimeout(() => {
+    const rect = rocket.getBoundingClientRect();
+    rocket.remove();
+    explode(rect.left, rect.top);
+  }, 1600);
+}
+
+// Explosion with gravity fall
+function explode(x, y) {
+  const colors = [
+    "#ff2d2d", "#ffd700", "#00eaff",
+    "#ff6fff", "#7cff00", "#ff8c00",
+    "#00ffcc", "#ff1493", "#ffffff"
+  ];
+
+  for (let i = 0; i < 220; i++) {   // MORE sparks = bigger firework
+    const spark = document.createElement("div");
+    spark.className = "spark";
+    spark.style.left = x + "px";
+    spark.style.top = y + "px";
+    spark.style.background =
+      colors[Math.floor(Math.random() * colors.length)];
+
+    const angle = Math.random() * Math.PI * 2;
+    const spread = Math.random() * 320 + 120; // BIGGER radius
+
+    const dx = Math.cos(angle) * spread;
+    const dy = Math.sin(angle) * spread + 380; // stronger gravity fall
+
+    spark.style.setProperty("--x", dx + "px");
+    spark.style.setProperty("--y", dy + "px");
+
+    document.body.appendChild(spark);
+    setTimeout(() => spark.remove(), 3200);
+  }
+}
+
+// Launch MULTIPLE fireworks at once
+function launchMultipleFireworks() {
+  for (let i = 0; i < 5; i++) {
+    setTimeout(launchFirework, i * 200); // slight stagger = realistic
+  }
+}
+
+// Start + repeat every 3 seconds
+launchMultipleFireworks();
+setInterval(launchMultipleFireworks, 3000);
+</script>
+
+</body>
+</html>
